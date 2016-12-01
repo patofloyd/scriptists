@@ -1,0 +1,17 @@
+{
+  "name": "AlarmSite",
+  "version": "0.0.1",
+  "dependencies": {
+    "body-parser": "*",
+    "compression": "*",
+    "cookie-parser": "*",
+    "debug": "*",
+    "express": "*",
+    "express-session": "^1.14.2",
+    "gulp": "*",
+    "gulp-clean-css": "*",
+    "gulp-less": "*",
+    "mongoose": "*",
+    "serve-favicon": "*"
+  }
+}

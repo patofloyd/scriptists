@@ -12,6 +12,7 @@
     "gulp-clean-css": "*",
     "gulp-less": "*",
     "mongoose": "*",
-    "serve-favicon": "*"
+    "serve-favicon": "*",
+    "johnny-five": "*"
   }
 }

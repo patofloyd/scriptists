@@ -16,6 +16,7 @@ g = {}; // all global variables (ex. settings)
   "gulp-less",
   "gulp-clean-css",
   "mongoose",
+  "johnny-five",
   "./settingsConstr",
   "./classLoader"
 ].forEach(function(x){

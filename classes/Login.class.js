@@ -1,4 +1,6 @@
 var s = g.settings;
+var myDB = new g.classes.DB();
+var Happening = myDB.getModel("happening");
 
 module.exports = class Login {
   constructor(express) {
@@ -47,7 +49,15 @@ module.exports = class Login {
       if (result) {
         // create a session variable, if we found a result
         req.session.loggedIn = result._id;
-        req.session.xUsername = result.fName;
+        req.session.xUsername = result.email;
+        Happening.create({
+            date: Date.now(),
+            type: "User " + req.session.xUsername + " has logged in"
+        }, function(err, happening){
+            if(err) {
+                res.send(err);
+            }
+        });    
       }
       res.header('X-Client-id', req.sessionID).header('X-username', req.session.xUsername);
      // just answer something, without giving anything away

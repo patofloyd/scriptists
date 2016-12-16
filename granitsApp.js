@@ -6,7 +6,7 @@ board.on("ready", function() {
 
   var motion = new five.Motion(7);
   var button = new five.Button(3);
-    var led = new five.Led(13);
+  var led = new five.Led(13);
   
   board.repl.inject({
     button: button
@@ -113,9 +113,6 @@ board.on("ready", function() {
     }    
   } 
 
-
-
- 
 
 
 });

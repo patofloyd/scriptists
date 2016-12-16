@@ -10,7 +10,6 @@ var request = require('request');
 
 var detectedObject = {};
 
-
 app.use(express.static('public'));
 app.use(bodyparser.urlencoded({extended:true}))
 mongoose.connect('mongodb://127.0.0.1/scriptists');
@@ -34,112 +33,117 @@ app.get('/detection', function (req, res) {
     if(err) {console.log(err)}
     res.json(result)
   })
+
 });
 
-  board.on("ready", function() {
-    var motion = new five.Motion(7);
-    var button = new five.Button(3);
-    var led = new five.Led(13);
-    
-    board.repl.inject({
-      button: button
-    });
+board.on("ready", function() {
+  var motion = new five.Motion(7);
+  var button = new five.Button(3);
+  var led = new five.Led(13);
+  
+  board.repl.inject({
+    button: button
+  });
 
-    motion.on("calibrated", function() {
-      console.log("Welcome, please sign in");
-    });
+  motion.on("calibrated", function() {
+    console.log("Welcome, please sign in");
+  });
 
-    var motionTimeoutMemory;
-    var me = this;
-    motion.on("motionstart", function() {
+  var motionTimeoutMemory;
+  var alarmIntervalMemory;
+  var me = this;
+  motion.on("motionstart", function() {
 
-      console.log("Motion Detected, Please sign in");
+    // Don't do anything if we are already waiting for user input/alarm
+    if(motionTimeoutMemory){ return; }
 
-      detectedObject.date = Date.now();
+    console.log("Motion Detected, Please sign in");
+
+    detectedObject.date = Date.now();
 
     me.repl.inject({
       led: led
     });
 
     led.on();
-      motionTimeoutMemory = setTimeout(soundAlarm, 1000);
 
-    });
+    motionTimeoutMemory = setTimeout(soundAlarm, 10000);
 
-    function soundAlarm(){
-      var piezo = new five.Piezo(5);
-      detectedObject.hasLoggedIn = false;
+  });
+
+  function soundAlarm(){
+    motionTimeoutMemory = false;
+    console.log("ALARM STARTING");
+    var piezo = new five.Piezo(5);
+
     board.repl.inject({
       piezo: piezo
     });
 
-    piezo.play({
+    var song = [["C4", 1 / 4], ["D4", 1 / 4]];
 
-      song: [
-        ["C4", 1 / 4],
-        ["D4", 1 / 4],
-        ["F4", 1 / 4],
-        ["D4", 1 / 4],
-        ["A4", 1 / 4],
-        [null, 1 / 4],
-        ["A4", 1],
-        ["G4", 1],
-        [null, 1 / 2],
-        ["C4", 1 / 4],
-        ["D4", 1 / 4],
-        ["F4", 1 / 4],
-        ["D4", 1 / 4],
-        ["G4", 1 / 4],
-        [null, 1 / 4],
-        ["G4", 1],
-        ["F4", 1],
-        [null, 1 / 2]
-      ],
-      tempo: 100
-    });
-
-    piezo.play({
-      song: "C D F D A - A A A A G G G G - - C D F D G - G G G G F F F F - -",
-      beats: 1 / 4,
-      tempo: 100
-    });
-    }
-
-    var buttonTimeoutMemory;
-
-    button.on("up", function() {
-      
-      count += 1;
-
-      clearTimeout(buttonTimeoutMemory);
-      buttonTimeoutMemory = setTimeout(doneClicking, 1000);
-
-    });
-
-    function doneClicking(){
-
-      detectedObject.userId = count;
-      console.log(typeof(count))
-      var countResult = count;
-      count = 0;
-      console.log("Welcome User", countResult);
-      detectedObject.hasLoggedIn = true;
-        led.off();
-
-      var userFound = true;
-      if(userFound){
-         clearTimeout(motionTimeoutMemory);
-      }    
-      console.log(detectedObject)
-      var enDetection = new Detection(detectedObject)
-     
-    } 
+    clearInterval(alarmIntervalMemory);
+    alarmIntervalMemory = setInterval(function(){
+       piezo.play({
+        song: song,
+        tempo: 100
+      });
+    },600);
+   
+    
+    detectedObject.hasLoggedIn = false;
+    
+    // write to mongo
+  }
 
 
+  var buttonTimeoutMemory;
+
+  button.on("up", function() {
+
+    // No motion previously detected ignore button press
+    if(!motionTimeoutMemory){ return; }
+    
+    count += 1;
+    console.log("CLICKED");
+    clearTimeout(buttonTimeoutMemory);
+    buttonTimeoutMemory = setTimeout(doneClicking, 1000);
 
   });
 
+
+  function doneClicking(){
+
+    detectedObject.userId = count;
+    console.log(typeof(count))
+    var countResult = count;
+    count = 0;
+    console.log("Welcome User", countResult);
+    detectedObject.hasLoggedIn = true;
+      led.off();
+
+    var userFound = true;
+    if(userFound == true){
+      console.log("NO ALARM...");
+      clearInterval(alarmIntervalMemory);
+      clearTimeout(motionTimeoutMemory);
+      motionTimeoutMemory = false;
+    }
+
+    console.log(detectedObject)
+    var enDetection = new Detection(detectedObject);
+    enDetection.save(function(error){
+      console.log(error);
+    });
+    
+   
+  } 
+
+
+});
+
 var port = process.env.PORT || 3000;
 app.listen(port, function() {
- console.log("Server running on port: " +port)
- });
+  console.log("Server running on port: " +port);
+
+});

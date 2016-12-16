@@ -1,8 +1,8 @@
 var mongoose = require("mongoose");
 
 var Schema = mongoose.Schema({
-	date: {type: Date, required: true},
-	userId: {type: Number, required: true},
+	date: {type: String, required: true},
+	userId: {type: String, required: true},
   hasLoggedIn: {type: Boolean, required: true}
 });
 

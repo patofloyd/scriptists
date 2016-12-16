@@ -1,42 +1,11 @@
-var express = require('express');
-var app = express();
-var bodyparser = require('body-parser')
-var mongoose = require("mongoose");
-var Detection = require(__dirname+"/models/detection.js")
 var five = require("johnny-five");
 var board = new five.Board();
 var count = 0;
-var request = require('request');
 
-var detectedObject = {};
-
-
-app.use(express.static('public'));
-app.use(bodyparser.urlencoded({extended:true}))
-mongoose.connect('mongodb://127.0.0.1/scriptists');
-mongoose.connection.once('open', () => {
-  console.log("Mongoose connected to Scriptists");    
-  return
-});
-
-
-
-app.post('/detection', function (req, res) {  
-  console.log(req)
-  var enDetection = new Detection(req.body);
-  console.log("antaligen sparad i databas");
-  res.json(req.body)
-  
-});
-
-app.get('/detection', function (req, res) {  
-  Detection.find(function(err, result){
-    if(err) {console.log(err)}
-    res.json(result)
-  })
-});
+    
 
   board.on("ready", function() {
+
     var motion = new five.Motion(7);
     var button = new five.Button(3);
     var led = new five.Led(13);
@@ -49,14 +18,16 @@ app.get('/detection', function (req, res) {
       console.log("Welcome, please sign in");
     });
 
+
     var motionTimeoutMemory;
     var me = this;
     motion.on("motionstart", function() {
 
       console.log("Motion Detected, Please sign in");
 
-      detectedObject.date = Date.now();
-
+    // This will grant access to the led instance
+    // from within the REPL that's created when
+    // running this program.
     me.repl.inject({
       led: led
     });
@@ -66,15 +37,20 @@ app.get('/detection', function (req, res) {
 
     });
 
+
     function soundAlarm(){
       var piezo = new five.Piezo(5);
-      detectedObject.hasLoggedIn = false;
+
+    // Injects the piezo into the repl
     board.repl.inject({
       piezo: piezo
     });
 
+    // Plays a song
     piezo.play({
-
+      // song is composed by an array of pairs of notes and beats
+      // The first argument is the note (null means "no note")
+      // The second argument is the length of time (beat) of the note (or non-note)
       song: [
         ["C4", 1 / 4],
         ["D4", 1 / 4],
@@ -98,12 +74,21 @@ app.get('/detection', function (req, res) {
       tempo: 100
     });
 
+    // Plays the same song with a string representation
     piezo.play({
+      // song is composed by a string of notes
+      // a default beat is set, and the default octave is used
+      // any invalid note is read as "no note"
       song: "C D F D A - A A A A G G G G - - C D F D G - G G G G F F F F - -",
       beats: 1 / 4,
       tempo: 100
     });
     }
+
+    /* motion.on("motionend", function() {
+      console.log("Welcome, please sign in");
+    }); */
+
 
     var buttonTimeoutMemory;
 
@@ -118,28 +103,21 @@ app.get('/detection', function (req, res) {
 
     function doneClicking(){
 
-      detectedObject.userId = count;
-      console.log(typeof(count))
       var countResult = count;
       count = 0;
       console.log("Welcome User", countResult);
-      detectedObject.hasLoggedIn = true;
         led.off();
 
+      // Look in database if mathc for numberofclicks
       var userFound = true;
       if(userFound){
          clearTimeout(motionTimeoutMemory);
       }    
-      console.log(detectedObject)
-      var enDetection = new Detection(detectedObject)
-     
     } 
 
 
 
   });
 
-var port = process.env.PORT || 3000;
-app.listen(port, function() {
- console.log("Server running on port: " +port)
- });
+
+

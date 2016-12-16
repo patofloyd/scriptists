@@ -62,7 +62,7 @@ app.get('/detection', function (req, res) {
     });
 
     led.on();
-      motionTimeoutMemory = setTimeout(soundAlarm, 1000);
+      motionTimeoutMemory = setTimeout(soundAlarm, 5000);
 
     });
 

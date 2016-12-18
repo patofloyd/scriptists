@@ -10,12 +10,26 @@ var request = require('request');
 
 var detectedObject = {};
 
-app.use(express.static('public'));
+app.use(express.static(__dirname+ '/www'));
 app.use(bodyparser.urlencoded({extended:true}))
 mongoose.connect('mongodb://127.0.0.1/scriptists');
 mongoose.connection.once('open', () => {
   console.log("Mongoose connected to Scriptists");    
   return
+});
+
+app.get('/', function(req, res){
+  res.send('Please use /detection!');
+});
+
+//Get detection by id
+app.get('/detection/:_id', function(req, res){
+  Detection.getDetectionById(req.params._id, function(err, detection){
+    if(err){
+      throw err;
+    }
+    res.json(detection);
+  });
 });
 
 

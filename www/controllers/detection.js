@@ -6,35 +6,37 @@ myApp.controller('DetectionsController', ['$scope', '$http', '$location', '$rout
 
 //Get all detections
 	$scope.getDetections = function(){
-		$http.get('/detections').success(function(response){
-			$scope.detection = response;
+		$http.get('localhost:3000/detection').success(function(response){
+				console.log(response)
+			$scope.detections = response;
 		});
 	}
 //Get detection by id
 	$scope.getDetections = function(){
 		var id = $routeParams.id;
-		$http.get('/detections/'+id).success(function(response){
-			$scope.detection = response;
+		$http.get('/detection/'+id).success(function(response){
+			$scope.detections = response;
 		});
 	}
 //Remove detection	
 	$scope.removeDetections = function(id){
-		$http.delete('/detections/'+id).success(function(response){
-			window.location.href='/detections';
+		$http.delete('/detection/'+id).success(function(response){
+			window.location.href='/detection';
 		});
 	}
 //Add detections
 	$scope.addDetections = function(){
-		console.log($scope.detection);
-		$http.post('/detections/', $scope.detection).success(function(response){
+		console.log($scope.detections);
+		$http.post('/detection/', $scope.detection).success(function(response){
 			window.location.href='/detections';
 		});
 	}
 //Update detection
 	$scope.updateDetection = function(){
 		var id = $routeParams.id;
-		$http.put('detections/'+id, $scope.detection).success(function(response){
-			window.location.href='#/detections';
+		$http.put('detection/'+id, $scope.detection).success(function(response){
+			window.location.href='#/detection';
 		});
 	}
+	$scope.getDetections();
 }]);

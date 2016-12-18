@@ -1,0 +1,44 @@
+
+<div class="container">
+  <div class="row">
+      <div class="col-xs-24 col-md-24">
+          <h1>Latest Detected</h1><hr>          
+      </div>
+        
+  </div>  
+</div>
+
+
+<div class="container">
+  <div class="row">
+    <div class="col-xs-24" ng-controller="DetectionsController">
+           
+        <div class="well well-xs">
+          
+          <div class="row">
+            <div class="col-xs-24  pizza">
+              <ol>
+                <li ng-repeat="detection in detections">
+
+                  
+                  <div class="col-xs-6"><b>{{detection.date}}</b></div>
+                  <div class="col-xs-6"><b>{{detection.userId}}</b></div>
+                  <div class="col-xs-6"><b>{{detection.hasLoggedIn}}</b></div>
+
+                  
+                </li>
+              </ol>
+               
+            </div>
+          </div>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+    
+
+
+
+  

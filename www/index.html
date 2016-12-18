@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="myApp">
   <head>
     <title>Ingraniti Solutions</title>
     <meta charset="utf-8">
@@ -12,8 +12,19 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 
     <!-- Latest compiled and minified JavaScript -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
+  <!-- JS libs -->
+    <script src="libs/jquery.min.js"></script>
+    <script src="libs/jquery-ui-1.11.4/jquery-ui.min.js"></script>
+    <script src="libs/angular.min.js"></script>
+    <script src="libs/angular-touch.min.js"></script>
+    <script src="libs/angular-route.min.js"></script>
+    <script src="libs/angular-resource.min.js"></script>
+    <script src="libs/ui-bootstrap-tpls.min.js"></script>
+    <script src="https://code.angularjs.org/1.2.5/i18n/angular-locale_sv-se.js"></script>
+    <script src='/libs/lodash.js'></script>
+    <script src='/libs/angular-simple-logger.js'></script>
+    <script src='/libs/ng-alertify.js'></script>
     <script src="js/myScript.js"></script>
    
   </head>
@@ -33,19 +44,23 @@
 
       <div class="jumbotron">
         <h3>Alarm System Ingraniti Corporation</h3>
-        <p class="lead">Welcome, please sign in!</p>
-        <p><a class="btn btn-lg btn-info" href="#" role="button">Sign in!</a></p>
+          <p class="lead">Welcome, please sign in!</p>
+          <p><a class="btn btn-lg btn-info" href="#" role="button">Sign in!</a></p>
 
-      <button class="btn btn-lg btn-success">On</button>
-      <button class="btn btn-lg btn-warning"> Off</button>
+            <button class="btn btn-lg btn-success">On</button>
+            <button class="btn btn-lg btn-warning"> Off</button>
       </div>
-
+    
+      <div ng-view></div>
+        
 
 
   <footer class="footer">
-    <p>&copy; 2016 Larmsystem AB Malmö.</p>
+    <p>&copy; 2016 Larmsystem Ingranity AB Malmö.</p>
   </footer>
 
-</div>
+  <script src="app.js"></script>
+  <script src="controllers/detection.js"></script>
+  
   </body>
 </html>

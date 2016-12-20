@@ -80,7 +80,6 @@ board.on("ready", function() {
     });
 
     led.on();
-      motionTimeoutMemory = setTimeout(soundAlarm, 5000);
 
     motionTimeoutMemory = setTimeout(soundAlarm, 10000);
 

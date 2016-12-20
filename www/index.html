@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html ng-app="myApp">
   <head>
-    <title>Ingraniti Solutions</title>
+    <title>Ingranity Solutions</title>
     <meta charset="utf-8">
     <base href="/">
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -26,31 +26,34 @@
     <script src='/libs/angular-simple-logger.js'></script>
     <script src='/libs/ng-alertify.js'></script>
     <script src="js/myScript.js"></script>
+    <!-- directives -->
+    <!--script src="/directives/"></script-->
+    
    
   </head>
   <body>
    
   <div class="container">
+
       <div class="header clearfix">
         <nav>
           <ul class="nav nav-pills pull-right">
-            <li role="presentation" class="active"><a href="#">Home</a></li>
-            <li role="presentation"><a href="#">About</a></li>
-            <li role="presentation"><a href="#">Contact</a></li>
+            <li role="presentation" class="active"><a ng-href="/">Home</a></li>
+            <li role="presentation"><a ng-href="#">About</a></li>
+            <li role="presentation"><a ng-href="#">Contact</a></li>
           </ul>
         </nav>
-        <h3 class="text-muted">Project name</h3>
-      </div>
 
+        <h3 class="text-muted">Project name</h3>
+      </div>    
       <div class="jumbotron">
-        <h3>Alarm System Ingraniti Corporation</h3>
+        <h3>Alarm System Ingranity Corporation</h3>
           <p class="lead">Welcome, please sign in!</p>
           <p><a class="btn btn-lg btn-info" href="#" role="button">Sign in!</a></p>
 
             <button class="btn btn-lg btn-success">On</button>
             <button class="btn btn-lg btn-warning"> Off</button>
       </div>
-    
       <div ng-view></div>
         
 
@@ -59,8 +62,9 @@
     <p>&copy; 2016 Larmsystem Ingranity AB Malmö.</p>
   </footer>
 
-  <script src="controllers/detection.js"></script>
   <script src="app.js"></script>
-  
+  <script src="controllers/detection.js"></script>
+
+   
   </body>
 </html>

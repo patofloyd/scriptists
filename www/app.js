@@ -16,3 +16,12 @@ myApp.config(function($routeProvider){
 	//$locationProvider.html5Mode(true);
     
 });
+
+$(function(){
+  $('.alarm-off').click(function(){
+    $.get('/shutDown',function(){ 
+      console.log("ALARM OFF!");
+    });
+  });
+
+})

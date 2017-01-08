@@ -7,6 +7,7 @@ var five = require("johnny-five");
 var board = new five.Board();
 var count = 0;
 var request = require('request');
+var alarmIntervalMemory;
 
 var detectedObject = {};
 
@@ -22,6 +23,8 @@ app.get('/', function(req, res){
   res.send('Please use /detection!');
 });
 
+
+
 //Get detection by id
 app.get('/detection/:_id', function(req, res){
   Detection.getDetectionById(req.params._id, function(err, detection){
@@ -35,9 +38,8 @@ app.get('/detection/:_id', function(req, res){
 
 
 app.post('/detection', function (req, res) {  
-  console.log(req)
   var enDetection = new Detection(req.body);
-  console.log("antaligen sparad i databas");
+  //console.log("antaligen sparad i databas");
   res.json(req.body)
   
 });
@@ -49,6 +51,13 @@ app.get('/detection', function (req, res) {
   })
 
 });
+
+app.get('/shutDown', function (req, res) {  
+  clearInterval(alarmIntervalMemory);
+  res.end();
+
+});
+
 
 board.on("ready", function() {
   var motion = new five.Motion(7);
@@ -64,7 +73,6 @@ board.on("ready", function() {
   });
 
   var motionTimeoutMemory;
-  var alarmIntervalMemory;
   var me = this;
   motion.on("motionstart", function() {
 
@@ -73,7 +81,8 @@ board.on("ready", function() {
 
     console.log("Motion Detected, Please sign in");
 
-    detectedObject.date = Date.now();
+    detectedObject.date =  new Date().toISOString().slice(0,10).replace(/-/g,"-");
+
 
     me.repl.inject({
       led: led
@@ -102,12 +111,18 @@ board.on("ready", function() {
         song: song,
         tempo: 100
       });
-    },600);
+    },400);
    
     
     detectedObject.hasLoggedIn = false;
+    detectedObject.userId = "INTRUDER"
+
+
+    var enDetection = new Detection(detectedObject);
+    enDetection.save(function(error){
+      console.log(error);
+    });
     
-    // write to mongo
   }
 
 
@@ -129,7 +144,6 @@ board.on("ready", function() {
   function doneClicking(){
 
     detectedObject.userId = count;
-    console.log(typeof(count))
     var countResult = count;
     count = 0;
     console.log("Welcome User", countResult);
@@ -137,6 +151,7 @@ board.on("ready", function() {
       led.off();
 
     var userFound = true;
+    
     if(userFound == true){
       console.log("NO ALARM...");
       clearInterval(alarmIntervalMemory);
@@ -150,6 +165,7 @@ board.on("ready", function() {
       console.log(error);
     });
     
+
    
   } 
 
